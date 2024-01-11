@@ -8,12 +8,50 @@ $page_title = "Vouchers List";
 include 'header.php';
 include 'sidenav.php';
 
+$response = $action->fetchVoucher('all');
+
+if(is_array($response)){
+    $tbody = " ";
+    foreach($response as $data){
+        $cat = $action->fetchVoucherCategory($data['payment_category']); //echo json_encode($cat); 
+        $cat_str = $cat[0]['code']. " - ". $cat[0]['name'];
+        if($data['is_paid'] == 1){
+            $paid_str = '<span class="badge bg-primary p-2">Paid</span>';
+
+        }else{
+            $paid_str = '<span class="badge bg-danger p-2">unpaid</span>';
+        }
+
+        $tbody .= '<tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="check1" value="option">
+                            </div>
+                        </td>
+                        <td>'.$data['voucher_date'].'</td>
+                        <td>'.$data['voucher_no'].'</td>
+                        <td>'.$data['payee_name'].'</td>
+                        <td>'.$cat_str.'</td>
+                        <td>'.$data['voucher_type'].'</td>
+                        <td>₦'.number_format($data['amount']).'</td>
+                        <td>₦'.number_format($data['net_amount']).'</td>
+                        <td><span class="badge bg-secondary"> Initiated </span></td>
+                        <td>'.$paid_str.'</td>
+                        <td> 
+                            <a class="link-info me-2" href="voucher-view.php?id='.$data['id'].'"><i class="las la-eye fs-20 align-middle me-1"></i>View</a>
+                            <a class="link-warning" href="voucher-edit.php?id='.$data['id'].'"><i class="las la-pen fs-20 align-middle me-1"></i>Edit</a>
+                        </td>
+                        
+                    </tr>';
+    }
+
+}else{
+    $tbody = "<tr> NO DATA TO FETCH </tr>";
+}
+
+
 ?>
 
-<div class="main-content">
-
-    <div class="page-content">
-        <div class="container-fluid">
 
             <!-- start page title -->
             <div class="row">
@@ -60,8 +98,8 @@ include 'sidenav.php';
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive table-card">
-                    <table class="table table-hover table-nowrap align-middle mb-0">
-                        <thead>
+                    <table class="table table-hover table-bordered table-nowrap align-middle mb-0">
+                        <thead class="table-dark">
                             <tr class="text-muted text-uppercase">
                                 <th style="width: 50px;">
                                     <div class="form-check">
@@ -72,154 +110,17 @@ include 'sidenav.php';
                                 <th scope="col">Voucher No</th>
                                 <th scope="col">Payee Name</th>
                                 <th scope="col" style="width: 20%;">Payment Category</th>
-                                <th scope="col">Voucher Type</th>
+                                <th scope="col">Voucher <br> Type</th>
                                 <th scope="col">Amount</th>
-                                <th scope="col">Net Payment</th>
+                                <th scope="col">Net Payment</th> 
+                                <th scope="col">Voucher <br> phase</th> 
                                 <th scope="col" style="width: 16%;">Status</th>
                                 <th scope="col" style="width: 12%;">Action</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="check1" value="option">
-                                    </div>
-                                </td>
-                                <td>01-01-2023</td>
-                                <td><p class="fw-medium mb-0">VOU2150</p></td>
-                                <td>
-                                    <a href="#javascript: void(0);" class="text-body align-middle fw-medium">Mustapha Ibrahim</a>
-                                </td>
-                                <td>0001 - Electricity</td>
-                                <td>Debit</td>
-                                <td>N10000.00</td>
-                                <td>N86450.00</td>
-                                <td><span class="badge bg-success-subtle text-success p-2">Paid</span></td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="las la-ellipsis-h align-middle fs-18"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li>
-                                                <button class="dropdown-item" href="javascript:void(0);"><i class="las la-eye fs-18 align-middle me-2 text-muted"></i>
-                                                    View</button>
-                                            </li>
-                                            <li>
-                                                <button class="dropdown-item" href="javascript:void(0);"><i class="las la-pen fs-18 align-middle me-2 text-muted"></i>
-                                                    Edit</button>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="javascript:void(0);"><i class="las la-file-download fs-18 align-middle me-2 text-muted"></i>
-                                                    Download</a>
-                                            </li>
-                                            <li class="dropdown-divider"></li>
-                                            <li>
-                                                <a class="dropdown-item remove-item-btn" href="#">
-                                                    <i class="las la-trash-alt fs-18 align-middle me-2 text-muted"></i>
-                                                    Delete
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="check1" value="option">
-                                    </div>
-                                </td>
-                                <td>02-01-2023</td>
-                                <td><p class="fw-medium mb-0">VOU2157</p></td>
-                                <td>
-                                    <a href="#javascript: void(0);" class="text-body align-middle fw-medium">Stephen Kelechi</a>
-                                </td>
-                                <td>0002 - Water Bill</td>
-                                <td>Credit</td>
-                                <td>N12500.00</td>
-                                <td>N9600.00</td>
-                                <td><span class="badge bg-warning-subtle text-warning p-2">Unpaid</span></td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="las la-ellipsis-h align-middle fs-18"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li>
-                                                <button class="dropdown-item" href="javascript:void(0);"><i class="las la-eye fs-18 align-middle me-2 text-muted"></i>
-                                                    View</button>
-                                            </li>
-                                            <li>
-                                                <button class="dropdown-item" href="javascript:void(0);"><i class="las la-pen fs-18 align-middle me-2 text-muted"></i>
-                                                    Edit</button>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="javascript:void(0);"><i class="las la-file-download fs-18 align-middle me-2 text-muted"></i>
-                                                    Download</a>
-                                            </li>
-                                            <li class="dropdown-divider"></li>
-                                            <li>
-                                                <a class="dropdown-item remove-item-btn" href="#">
-                                                    <i class="las la-trash-alt fs-18 align-middle me-2 text-muted"></i>
-                                                    Delete
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="check1" value="option">
-                                    </div>
-                                </td>
-                                <td>03-01-2023</td>
-                                <td><p class="fw-medium mb-0">VOU2160</p></td>
-                                <td>
-                                    <a href="#javascript: void(0);" class="text-body align-middle fw-medium">opeyemi Dauda</a>
-                                </td>
-                                <td>0004 - Refreshment</td>
-                                <td>Credit</td>
-                                <td>N120500.00</td>
-                                <td>N103050.00</td>
-                                <td><span class="badge bg-success-subtle text-success p-2">paid</span></td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="las la-ellipsis-h align-middle fs-18"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li>
-                                                <button class="dropdown-item" href="javascript:void(0);"><i class="las la-eye fs-18 align-middle me-2 text-muted"></i>
-                                                    View</button>
-                                            </li>
-                                            <li>
-                                                <button class="dropdown-item" href="javascript:void(0);"><i class="las la-pen fs-18 align-middle me-2 text-muted"></i>
-                                                    Edit</button>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="javascript:void(0);"><i class="las la-file-download fs-18 align-middle me-2 text-muted"></i>
-                                                    Download</a>
-                                            </li>
-                                            <li class="dropdown-divider"></li>
-                                            <li>
-                                                <a class="dropdown-item remove-item-btn" href="#">
-                                                    <i class="las la-trash-alt fs-18 align-middle me-2 text-muted"></i>
-                                                    Delete
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-
-                           
-
+                            <?php echo $tbody ; ?>
                             
                         </tbody><!-- end tbody -->
                     </table><!-- end table -->

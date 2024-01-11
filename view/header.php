@@ -6,7 +6,7 @@
 <head>
 
     <meta charset="utf-8" />
-    <title>Invoice Portal - <?php echo $page_title; ?></title>
+    <title>Voucher Portal - <?php echo $page_title; ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Voucher Management System" name="description" />
     <meta content="Stephen Kelechi Emmanuel" name="author" />

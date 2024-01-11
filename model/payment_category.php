@@ -3,8 +3,8 @@
 include '../controller/controller.php';
 
 if(isset($_POST['category_code']) && isset($_POST['category_name'])){
-    $code = $_POST['category_code'];
-    $name = $_POST['category_name'];
+    $code = $action->validateInput($_POST['category_code']);
+    $name = $action->validateInput($_POST['category_name']);
 
     $response =$action->createVoucherCategory($code, $name);
 
@@ -15,7 +15,7 @@ if(isset($_POST['category_code']) && isset($_POST['category_name'])){
         echo $action->error;
     }
 }else{
-    echo "<script> alert('CATEGORY COULD NOT BE ADDED') </script>";
+    echo "<script> alert('CATEGORY COULD NOT BE ADDED \n\n INVALID DATA') </script>";
 }
 
 ?>

@@ -7,6 +7,26 @@ class Controller extends mysqli{
         parent::__construct("localhost:8889","test","","vm_portal");
     }
 
+    public function validateInput($input){
+        $valid_input = trim($input);
+        $valid_input = stripslashes($input);
+        $valid_input = strip_tags($input);
+        $valid_input = htmlspecialchars($input);
+        $valid_input = $this->real_escape_string($input);
+
+        return $valid_input;        
+    }
+
+    public function validate($textInput){
+        $textInput = trim($textInput);
+        $textInput = stripslashes($textInput);
+        $textInput = strip_tags($textInput);
+        $textInput = htmlspecialchars($textInput);
+        $textInput = $this->connect->real_escape_string($textInput); 
+
+    
+        return $textInput;
+    }
     public function createVoucherCategory($code, $name){
         return $this->query("insert into payment_category (code, name) values('$code', '$name')");
 
@@ -32,8 +52,19 @@ class Controller extends mysqli{
         $sql = "INSERT INTO `voucher`(`payee_name`, `payee_email`, `payee_phone`, `payee_address`, `voucher_no`, `voucher_date`,  `payment_category`, `voucher_type`, `amount`, `vat`, `wht`, `stamp_duty`, `net_amount`, `initiator`,  `initiator_comment`) 
                     VALUES('$payee_name', '$payee_email', '$payee_phone', '$payee_address', '$voucher_no', '$voucher_date', $payment_category, '$voucher_type', $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator, '$initiator_comment') ";
         $result = $this->query($sql);
-        return $result;
+        // return $result;
+        return $sql;
+
     }
+
+
+    public function editVoucher($voucher_id, $payee_name, $payee_email, $payee_phone, $payee_address, $voucher_date, $payment_category, $voucher_type, $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator_comment){
+        $sql = " UPDATE `voucher` SET `payee_name`='$payee_name',`payee_address`='$payee_address',`payee_email`='$payee_email',`payee_phone`='$payee_phone', `voucher_date`='$voucher_date',`voucher_type`='$voucher_type',`payment_category`=$payment_category,`amount`=$amount,`vat`=$vat,`wht`=$wht,`stamp_duty`=$stamp_duty,`net_amount`=$net_amount,`initiator_comment`='$initiator_comment' where id = $voucher_id ";
+        $result = $this->query($sql);
+        // return $result;
+        return $sql;
+    }
+
 
     public function fetchVoucher($id){
         $where = is_numeric($id) ? " where id = $id " : " ";

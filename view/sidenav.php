@@ -35,7 +35,7 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <!--  <li class="menu-title"><span data-key="t-menu">Menu</span></li>  -->
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="/">
+                    <a class="nav-link menu-link" href="dashboard.php">
                         <i class="las la-house-damage"></i> <span data-key="t-dashboard">Dashboard</span>
                     </a>
                 </li>
@@ -80,3 +80,8 @@
 <!-- Left Sidebar End -->
 <!-- Vertical Overlay-->
 <div class="vertical-overlay"></div>
+
+<div class="main-content">
+
+    <div class="page-content">
+        <div class="container-fluid">
