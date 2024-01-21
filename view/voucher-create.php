@@ -8,29 +8,23 @@ $page_title = "Create Voucher";
 include 'header.php';
 include 'sidenav.php';
 
+if($_SESSION['user_type'] != 0 && $_SESSION['user_type'] != 1){?>
+    <script> 
+        Swal.fire({icon:"error", title: "<h3 style='color:red'>Error</h3>", text:'YOU ARE NOT ALLOWED TO ACCESS THIS PAGE'}) ; 
+        setTimeout(() => {location.replace('voucher-list.php'); }, 3000);
+    </script>
+    <!-- echo "<script> alert('YOU ARE NOT ALLOWED TO ACCESS THIS PAGE') ; location.replace('voucher-list.php'); </script>"; -->
+<?php 
+exit; }
+
 ?>
-
-            <!-- start page title -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0"><?php echo $page_title; ?> </h4>
-
-                        <!-- <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">@yield('breadcrumb-item')</a></li>
-                                <li class="breadcrumb-item active">@yield('breadcrumb-item-active')</li>
-                            </ol>
-                        </div> -->
-
-                    </div>
-                </div>
-            </div>
+     
 
             <div class="row justify-content-center">
                 <div class="col-xxl-9">
                     <div class="card">
                         <form class="needs-validation" action="../model/voucher.php?action=create" method="post"  id="invoice_form">
+                        <!-- <form class="needs-validation"  id="voucher_form"> -->
                             <div class="card-body border-bottom border-bottom-dashed p-4">
                                 <div class="containerss">
                                     <div class="row">
@@ -153,7 +147,7 @@ include 'sidenav.php';
 
 <script>
     $(document).ready(function(){
-        // $(".btn-sub").click(function(){Swal.fire("submit clicked")});
+        /***** calculate VTA, WHT, STAMP DUTY AND NET AMOUNT */
         $("#amount").change(function(){
             var amount = $("#amount").val();
             // Swal.fire("amount changed to "+amount);
@@ -168,6 +162,11 @@ include 'sidenav.php';
             $("#net_amount").val(net_amount);
 
         });
+
+        /**** SUBMIT FORM */
+        // $("#voucher-form").submit(function(){})
+
+
 
     })
 </script>

@@ -1,4 +1,7 @@
 <?php
+// session_start();
+include 'session.php';
+
  ini_set('display_errors', 1); ini_set('display_startup_errors', 1); error_reporting(E_ALL);
 
 class Controller extends mysqli{
@@ -17,16 +20,6 @@ class Controller extends mysqli{
         return $valid_input;        
     }
 
-    public function validate($textInput){
-        $textInput = trim($textInput);
-        $textInput = stripslashes($textInput);
-        $textInput = strip_tags($textInput);
-        $textInput = htmlspecialchars($textInput);
-        $textInput = $this->connect->real_escape_string($textInput); 
-
-    
-        return $textInput;
-    }
     public function createVoucherCategory($code, $name){
         return $this->query("insert into payment_category (code, name) values('$code', '$name')");
 
@@ -46,23 +39,38 @@ class Controller extends mysqli{
         }
     }
 
-    public function createVoucher($payee_name, $payee_email, $payee_phone, $payee_address, $voucher_date, $payment_category, $voucher_type, $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator_comment){
+    public function createVoucher($payee_name, $payee_email, $payee_phone, $payee_address, $voucher_date, $payment_category, $voucher_type, $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator, $initiator_comment){
         $voucher_no = $this->generateVoucherNo();
-        $initiator = 1;
         $sql = "INSERT INTO `voucher`(`payee_name`, `payee_email`, `payee_phone`, `payee_address`, `voucher_no`, `voucher_date`,  `payment_category`, `voucher_type`, `amount`, `vat`, `wht`, `stamp_duty`, `net_amount`, `initiator`,  `initiator_comment`) 
                     VALUES('$payee_name', '$payee_email', '$payee_phone', '$payee_address', '$voucher_no', '$voucher_date', $payment_category, '$voucher_type', $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator, '$initiator_comment') ";
         $result = $this->query($sql);
-        // return $result;
-        return $sql;
+        return $result;
 
     }
 
 
-    public function editVoucher($voucher_id, $payee_name, $payee_email, $payee_phone, $payee_address, $voucher_date, $payment_category, $voucher_type, $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator_comment){
+    public function editVoucher($voucher_id, $payee_name, $payee_email, $payee_phone, $payee_address, $voucher_date, $payment_category, $voucher_type, $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator, $initiator_comment){
         $sql = " UPDATE `voucher` SET `payee_name`='$payee_name',`payee_address`='$payee_address',`payee_email`='$payee_email',`payee_phone`='$payee_phone', `voucher_date`='$voucher_date',`voucher_type`='$voucher_type',`payment_category`=$payment_category,`amount`=$amount,`vat`=$vat,`wht`=$wht,`stamp_duty`=$stamp_duty,`net_amount`=$net_amount,`initiator_comment`='$initiator_comment' where id = $voucher_id ";
         $result = $this->query($sql);
-        // return $result;
-        return $sql;
+        return $result;
+    }
+
+    // public function reviewVoucher($id, $reviewer){
+    //     $this->query("update voucher set reviewer = $reviewer, approval_level = 2, date_reviewed =  ")
+    // }
+
+    public function updateVoucherLevel($voucher_id, $user, $level, $reason, $date){
+        if($level == 2){
+            // $sql = "update voucher set reviewer = $user, approval_level = $level, date_reviewed = '$date', reviewer_comment='$comment' where id = $voucher_id";
+            $sql = "update voucher set reviewer = $user, approval_level = $level, date_reviewed = '$date' where id = $voucher_id";
+        }elseif($level == 3){
+            // $sql = "update voucher set approver = $user, approval_level = $level, date_approved = '$date', approver_comment='$comment' where id = $voucher_id";
+            $sql = "update voucher set approver = $user, approval_level = $level, date_approved = '$date' where id = $voucher_id";
+        }elseif($level == 4){
+            $sql = "update voucher set rejected_by = $user, approval_level = $level, date_rejected = '$date', reject_reason='$reason' where id = $voucher_id";
+        }
+        $result = $this->query($sql);
+        return $result;
     }
 
 
@@ -107,6 +115,81 @@ class Controller extends mysqli{
         
     }
 
+    public function fetchUserType($id){
+        $where = is_numeric($id) ? " where id = $id " : " ";
+        $result = $this->query("select id, name from user_type $where ORDER BY id ASC");
+        $data = [];
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $data[] = $row;
+            }
+            return $data;
+        }else{
+            return "No Data to fetch";
+        }
+    }
+
+    public function createUser($firstname, $lastname, $email, $phone, $password, $userType, $imgPath){
+        $sql = " INSERT INTO `users`(`first_name`, `last_name`, `email`, `password`, `phone`, `user_type`, `signature`) VALUES ('$firstname', '$lastname', '$email', '$password', '$phone', $userType, '$imgPath' ) ";
+        $result = $this->query($sql);
+        return $result;
+    }
+
+    public function login($email, $password){
+        // $pwd = password_verify($password, )
+        $response = $this->checkUserExist($email);
+        if($response['status'] === true){
+            $user = $response['data'];
+            $pwd = $user['password'];
+            if($password == $pwd){
+                // session_start();
+                $_SESSION = $user;
+                $_SESSION['last_activity'] = time();
+                // $_SESSION['isAdmin'] = $user['isAdmin'];
+                // $_SESSION['password_changed'] = $user['isLoggedIn'];
+                // $_SESSION['user_id'] = $user['id'];
+
+                return ['status'=>1001, 'message'=>'Login Successfull'];
+            }else{
+                // echo "<script> alert('INVALID PASSWORD') ; location.replace('../view/login.php'); </script>";
+                return ['status'=> 4002, 'message'=>'Invalid Password'];
+            }
+        }else{
+            // echo "<script> alert('Email does not exist on this platform') ; location.replace('../view/login.php'); </script>";
+            return ['status'=> 4004, 'message'=>'Email does not exist on this platform'];
+        }
+        // $result = $this->query("select * from users where email = '$email' and password = '$password' ");
+        // if($result->num_rows > 0){
+        // }else{
+        //     return false;
+        // }
+    }
+
+    public function checkUserExist($email){
+        $result = $this->query("select * from users where email = '$email' ");
+        if($result->num_rows > 0){
+            return ['status'=>true, 'data'=>$result->fetch_assoc()];
+        }else{
+            return ['status'=>false, 'data'=>NULL];
+        }
+    }
+
+    public function fetchUser($id){
+        $where = is_numeric($id) ? " where  id = $id " : " ";
+        $result = $this->query("select * from users $where  ORDER BY id DESC");
+        $data = [];
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $data[] = $row;
+            }
+            return $data;
+        }else{
+            return "No Data to fetch";
+        }
+    }
+
+
+    
 
 
 }

@@ -34,19 +34,21 @@
             </div>
             <ul class="navbar-nav" id="navbar-nav">
                 <!--  <li class="menu-title"><span data-key="t-menu">Menu</span></li>  -->
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link menu-link" href="dashboard.php">
                         <i class="las la-house-damage"></i> <span data-key="t-dashboard">Dashboard</span>
                     </a>
-                </li>
+                </li> -->
 
                 <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Voucher Management</span></li>
-
-                <li class="nav-item">
-                    <a href="voucher-create.php" class="nav-link" data-key="t-add-invoice"> Create Voucher </a>
-                </li>
+                
+                
                 <li class="nav-item">
                     <a href="voucher-list.php" class="nav-link" data-key="t-invoice"> View Vouchers </a>
+                </li>
+                <?php if($_SESSION['isAdmin'] == 1 || $_SESSION['user_type'] == 1){?>
+                <li class="nav-item">
+                    <a href="voucher-create.php" class="nav-link" data-key="t-add-invoice"> Create Voucher </a>
                 </li>
                 <li class="nav-item">
                     <a href="voucher-category-create.php" class="nav-link" data-key="t-add-invoice"> Create Voucher Category </a>
@@ -54,8 +56,8 @@
                 <li class="nav-item">
                     <a href="voucher-category-list.php" class="nav-link" data-key="t-add-invoice"> View Voucher Categories </a>
                 </li>
+                <?php } ?>
 
-                
 
                 <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Reports</span></li>
 
@@ -68,6 +70,16 @@
                 <li class="nav-item">
                     <a href="/report/trial-balance" class="nav-link" data-key="t-expenses-report"> Trial Balance </a>
                 </li>
+                <?php if($_SESSION['isAdmin'] == 1 ){ ?>
+                <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Users</span></li>
+                <li class="nav-item">
+                    <a href="user-create.php" class="nav-link" data-key="t-expenses-report"> Create Users </a>
+                </li>
+                <li class="nav-item">
+                    <a href="user-list.php" class="nav-link" data-key="t-expenses-report"> View Users </a>
+                </li>
+                <?php } ?>
+
                         
 
             </ul>
@@ -85,3 +97,11 @@
 
     <div class="page-content">
         <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0"><?= $page_title ?></h4>
+                    </div>
+                </div>
+            </div>

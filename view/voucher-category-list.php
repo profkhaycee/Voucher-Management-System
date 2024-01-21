@@ -8,17 +8,25 @@ $page_title = "Voucher Payment Category List";
 include 'header.php';
 include 'sidenav.php';
 
+if($_SESSION['user_type'] != 0 && $_SESSION['user_type'] != 1){?>
+    <script> 
+        Swal.fire({icon:"error", title: "<h3 style='color:red'>Error</h3>", text:'YOU ARE NOT ALLOWED TO ACCESS THIS PAGE'}) ; 
+        setTimeout(() => {location.replace('voucher-list.php'); }, 3000);
+    </script>
+    <!-- echo "<script> alert('YOU ARE NOT ALLOWED TO ACCESS THIS PAGE') ; location.replace('voucher-list.php'); </script>"; -->
+<?php 
+exit; }
+
+
+
+
 $response = $action->fetchVoucherCategory('all');
 
 if(is_array($response)){
     $tbody = " ";
     foreach($response as $data){
         $tbody .= '<tr>
-                        <td>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="check1" value="option">
-                            </div>
-                        </td>
+                        
                         <td>'.$data['code'].'</td>
                         <td>'.$data['name'].'</td>
                         <td>
@@ -38,22 +46,7 @@ if(is_array($response)){
 ?>
 
 
-<!-- start page title -->
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0"><?php echo $page_title; ?> </h4>
 
-            <!-- <div class="page-title-right">
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">@yield('breadcrumb-item')</a></li>
-                    <li class="breadcrumb-item active">@yield('breadcrumb-item-active')</li>
-                </ol>
-            </div> -->
-
-        </div>
-    </div>
-</div>
 <div class="row pb-4 gy-3">
     <div class="col-sm-4">
         <a href="voucher-category-create.php" class="btn btn-primary addMembers-modal"><i class="las la-plus me-1"></i> Add Voucher Category</a>
@@ -82,15 +75,10 @@ if(is_array($response)){
     <div class="col-xl-10">
         <div class="card">
             <div class="card-body">
-                <div class="table-responsive table-card">
-                    <table class="table table-hover table-nowrap align-middle mb-0">
-                        <thead>
+                <div class="table-responsive table-card px-2">
+                    <table class="table table-hover table-striped table-bordered table-nowrap align-middle mb-0">
+                        <thead class="table-dark">
                             <tr class="text-muted text-uppercase">
-                                <th style="width: 50px;">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="checkAll" value="option">
-                                    </div>
-                                </th>
                                 
                                 <th scope="col">Payment Category Code</th>
                                 <th scope="col">Payment Category Name</th>

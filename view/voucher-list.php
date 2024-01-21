@@ -9,7 +9,7 @@ include 'header.php';
 include 'sidenav.php';
 
 $response = $action->fetchVoucher('all');
-
+// echo json_encode($_SESSION) . "<hr>"; echo $_SESSION['last_activity'] - time();
 if(is_array($response)){
     $tbody = " ";
     foreach($response as $data){
@@ -21,13 +21,18 @@ if(is_array($response)){
         }else{
             $paid_str = '<span class="badge bg-danger p-2">unpaid</span>';
         }
+        if($data['approval_level'] == 1){
+            $level_str = '<span class="badge bg-success"> Initiated </span>';
+        }elseif($data['approval_level'] == 2){
+            $level_str = '<span class="badge bg-warning"> Reviewed </span>';
+        }elseif($data['approval_level'] == 3){
+            $level_str = '<span class="badge bg-primary"> Approved </span>';
+        }elseif($data['approval_level'] == 4){
+            $level_str = '<span class="badge bg-danger"> Rejected </span>';
+        }
 
         $tbody .= '<tr>
-                        <td>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="check1" value="option">
-                            </div>
-                        </td>
+                        
                         <td>'.$data['voucher_date'].'</td>
                         <td>'.$data['voucher_no'].'</td>
                         <td>'.$data['payee_name'].'</td>
@@ -35,7 +40,7 @@ if(is_array($response)){
                         <td>'.$data['voucher_type'].'</td>
                         <td>₦'.number_format($data['amount']).'</td>
                         <td>₦'.number_format($data['net_amount']).'</td>
-                        <td><span class="badge bg-secondary"> Initiated </span></td>
+                        <td>'.$level_str.'</td>
                         <td>'.$paid_str.'</td>
                         <td> 
                             <a class="link-info me-2" href="voucher-view.php?id='.$data['id'].'"><i class="las la-eye fs-20 align-middle me-1"></i>View</a>
@@ -53,25 +58,10 @@ if(is_array($response)){
 ?>
 
 
-            <!-- start page title -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0"><?php echo $page_title; ?> </h4>
-
-                        <!-- <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">@yield('breadcrumb-item')</a></li>
-                                <li class="breadcrumb-item active">@yield('breadcrumb-item-active')</li>
-                            </ol>
-                        </div> -->
-
-                    </div>
-                </div>
-            </div>
-            <div class="row pb-4 gy-3">
+<?php if($_SESSION['user_type'] = 0  && $_SESSION['user_type'] = 1){?>          
+<div class="row pb-4 gy-3">
     <div class="col-sm-4">
-        <a href="voucher-create.php" class="btn btn-primary addMembers-modal"><i class="las la-plus me-1"></i> Add Invoices</a>
+        <a href="voucher-create.php" class="btn btn-primary addMembers-modal"><i class="las la-plus me-1"></i> Add Voucher</a>
     </div>
 
     <!--  <div class="col-sm-auto ms-auto">
@@ -90,7 +80,7 @@ if(is_array($response)){
        </div>
     </div>  -->
 </div>
-
+<?php } ?>
 
 
 <div class="row">
@@ -98,14 +88,14 @@ if(is_array($response)){
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive table-card">
-                    <table class="table table-hover table-bordered table-nowrap align-middle mb-0">
+                    <table class="table table-hover table-striped table-bordered table-nowrap align-middle mb-0">
                         <thead class="table-dark">
                             <tr class="text-muted text-uppercase">
-                                <th style="width: 50px;">
+                                <!-- <th style="width: 50px;">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="checkAll" value="option">
                                     </div>
-                                </th>
+                                </th> -->
                                 <th scope="col">Voucher Date</th>
                                 <th scope="col">Voucher No</th>
                                 <th scope="col">Payee Name</th>
