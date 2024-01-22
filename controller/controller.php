@@ -8,7 +8,6 @@ class Controller extends mysqli{
 
     function __construct() {
         parent::__construct("localhost:8889","test","","vm_portal");
-        // parent::__construct('localhost','kdclovee_kdc','!pS3O1]7o4','kdclovee_vms');
     }
 
     public function validateInput($input){
