@@ -5,6 +5,7 @@ include '../controller/controller.php';
 $page_title = "Create User";
 
 include 'header.php';
+include '../controller/session.php';
 include 'sidenav.php';
 
 if($_SESSION['isAdmin'] != 1){?>

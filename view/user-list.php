@@ -5,6 +5,8 @@ include '../controller/controller.php';
 $page_title = "View User";
 
 include 'header.php';
+include '../controller/session.php';
+
 include 'sidenav.php';
 
 if($_SESSION['isAdmin'] != 1){?>

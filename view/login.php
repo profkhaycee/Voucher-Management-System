@@ -130,29 +130,36 @@
                 e.preventDefault();
                 var datat = new FormData($("#login-form")[0]);
                 // var datat = new FormData(this);
-                console.log(datat)
+                // console.log(datat)
+                // console.info(datat.get('password'))
                             
-                    $.ajax({
-                        url: "../model/user.php?action=login",
-                        dataType: 'json',
-                        type: 'POST',
-                        contentType: false,
-                        processData: false,
-                        data: datat,
-                        success: function(response){
-                            console.log(response);
-                            if(response.status == 1001){
-                                location.replace('voucher-list.php')
-                                // Swal.fire({icon:"success", title: "<h3 style='color:green'>Success</h3>", text:response.message});
-                                // setTimeout(() => {
-                                //     location.replace('voucher-list.php')
-                                // }, 3000);
-                                
-                            }else{
-                                Swal.fire({icon:"error", title: "<h3 style='color:red'>Error</h3>", text:response.message});
-                            }
+                $.ajax({
+                    url: "../model/user.php?action=login",
+                    dataType: 'json',
+                    type: 'POST',
+                    contentType: false,
+                    processData: false,
+                    data: datat,
+                    success: function(response){
+                        console.log("res--->"+response);
+                        if(response.status == 1001){
+                            location.replace('voucher-list.php')
+                            // Swal.fire({icon:"success", title: "<h3 style='color:green'>Success</h3>", text:response.message});
+                            // setTimeout(() => {
+                            //     location.replace('voucher-list.php')
+                            // }, 3000);
+                            
+                        }else{
+                            Swal.fire({icon:"error", title: "<h3 style='color:red'>Error</h3>", text:response.message});
                         }
-                    })
+                    }, 
+                    error: function(jqXHR, textStatus, errorThrown){
+                        alert('error ---- something went wrong. please contact Administartor')
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    }
+                })
             })
         })
     </script>

@@ -1,6 +1,6 @@
 <?php
-// session_start();
-include 'session.php';
+session_start();
+// include 'session.php';
 
  ini_set('display_errors', 1); ini_set('display_startup_errors', 1); error_reporting(E_ALL);
 
@@ -8,6 +8,7 @@ class Controller extends mysqli{
 
     function __construct() {
         parent::__construct("localhost:8889","test","","vm_portal");
+        // parent::__construct('localhost','kdclovee_kdc','!pS3O1]7o4','kdclovee_vms');
     }
 
     public function validateInput($input){
@@ -55,9 +56,6 @@ class Controller extends mysqli{
         return $result;
     }
 
-    // public function reviewVoucher($id, $reviewer){
-    //     $this->query("update voucher set reviewer = $reviewer, approval_level = 2, date_reviewed =  ")
-    // }
 
     public function updateVoucherLevel($voucher_id, $user, $level, $reason, $date){
         if($level == 2){
@@ -72,7 +70,6 @@ class Controller extends mysqli{
         $result = $this->query($sql);
         return $result;
     }
-
 
     public function fetchVoucher($id){
         $where = is_numeric($id) ? " where id = $id " : " ";
@@ -165,6 +162,11 @@ class Controller extends mysqli{
         // }
     }
 
+    public function updatePassword($password, $user_id){
+        $result = $this->query(" update users set password = '$password', password_changed = 1 where id = $user_id ");
+        return $result;
+    }
+
     public function checkUserExist($email){
         $result = $this->query("select * from users where email = '$email' ");
         if($result->num_rows > 0){
@@ -188,6 +190,20 @@ class Controller extends mysqli{
         }
     }
 
+    public function fetchJournalReport(){
+        $result = $this->query(" select * from voucher where is_paid = 1 order by created_at desc ");
+        $data = [];
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $data[] = $row;
+            }
+            return $data;
+        }else{
+            return "No Data to fetch";
+        }
+
+
+    }
 
     
 

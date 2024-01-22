@@ -6,6 +6,7 @@ include '../controller/controller.php';
 $page_title = "Voucher Details";
 
 include 'header.php';
+include '../controller/session.php';
 include 'sidenav.php';
 
 $voucher_id = $_GET['id'];

@@ -34,11 +34,16 @@
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.4.0/css/fixedHeader.dataTables.min.css">
 
 
 </head>
 
 <body>
+
+<?php 
+// include '../controller/session.php';
+?>
 
     <!-- Begin page -->
     <div id="layout-wrapper">
@@ -56,7 +61,7 @@
                                 <img src="assets/images/logo-sm.png" alt="" height="40" width="50">
                             </span>
                             <span class="logo-lg">
-                                <img src="asset/images/logo-dark.png" alt="" height="40" width="50">
+                                <img src="assets/images/logo-dark.png" alt="" height="40" width="50">
                             </span>
                         </a>
 
@@ -102,7 +107,7 @@
                         <div class="dropdown-menu dropdown-menu-end">
                             <!-- item-->
                             <a class="dropdown-item" href="user-profile.php?id=<?=$_SESSION['id']?>"><i class="bx bx-user fs-15 align-middle me-1"></i> <span key="t-profile">Profile</span></a>
-                            <a class="dropdown-item" href="#"><i class="bx bx-wallet fs-15 align-middle me-1"></i> <span key="t-my-wallet">Change Password</span></a>
+                            <a class="dropdown-item" href="change-password.php?id=<?=$_SESSION['id']?>"><i class="bx bx-wallet fs-15 align-middle me-1"></i> <span key="t-my-wallet">Change Password</span></a>
                             <!-- <a class="dropdown-item d-block" href="#"><span class="badge bg-success float-end">11</span><i class="bx bx-wrench fs-15 align-middle me-1"></i> <span key="t-settings">Settings</span></a> -->
                             <!-- <a class="dropdown-item" href="auth-lockscreen.html"><i class="bx bx-lock-open fs-15 align-middle me-1"></i> <span key="t-lock-screen">Lock screen</span></a> -->
                             <div class="dropdown-divider"></div>

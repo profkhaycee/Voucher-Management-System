@@ -6,6 +6,8 @@ include '../controller/controller.php';
 $page_title = "Vouchers List";
 
 include 'header.php';
+include '../controller/session.php';
+
 include 'sidenav.php';
 
 $response = $action->fetchVoucher('all');
@@ -13,7 +15,7 @@ $response = $action->fetchVoucher('all');
 if(is_array($response)){
     $tbody = " ";
     foreach($response as $data){
-        $cat = $action->fetchVoucherCategory($data['payment_category']); //echo json_encode($cat); 
+        $cat = $action->fetchVoucherCategory($data['payment_category']);
         $cat_str = $cat[0]['code']. " - ". $cat[0]['name'];
         if($data['is_paid'] == 1){
             $paid_str = '<span class="badge bg-primary p-2">Paid</span>';

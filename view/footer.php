@@ -49,32 +49,40 @@
 <script src="assets/libs/node-waves/waves.min.js"></script>
 <script src="assets/libs/feather-icons/feather.min.js"></script>
 <script src="assets/js/plugins.js"></script>
+ <!-- password-addon init -->
+ <script src="assets/js/pages/password-addon.init.js"></script>
 
 
 
 <!-- apexcharts -->
-<script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+<!-- <script src="assets/libs/apexcharts/apexcharts.min.js"></script> -->
 
 <!-- Vector map-->
-<script src="assets/libs/jsvectormap/js/jsvectormap.min.js"></script>
-<script src="assets/libs/jsvectormap/maps/world-merc.js"></script>
+<!-- <script src="assets/libs/jsvectormap/js/jsvectormap.min.js"></script>
+<script src="assets/libs/jsvectormap/maps/world-merc.js"></script> -->
 
 <!-- Dashboard init -->
-<script src="assets/js/pages/dashboard.init.js"></script>
+<!-- <script src="assets/js/pages/dashboard.init.js"></script> -->
 
    <!-- dropzone js -->
-   <script src="assets/libs/dropzone/dropzone-min.js"></script>
+   <!-- <script src="assets/libs/dropzone/dropzone-min.js"></script>
 
-<script src="assets/js/pages/ecommerce-product-create.init.js"></script>
+<script src="assets/js/pages/ecommerce-product-create.init.js"></script> -->
 
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <!-- <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script> -->
+<script src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
 
 <!-- App js -->
 <script src="assets/js/app.js"></script>
 
 <script>
-    $('.table-responsive .table-hover').DataTable();
+    $('.table-responsive .table-hover').DataTable({
+        fixedHeader: {
+            header: true,
+            footer: true
+    }
+    });
 </script>
 
 

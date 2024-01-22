@@ -65,7 +65,7 @@ if($_GET['action'] == 'create'){
    $response['message'] = $message;
    $response['status'] = $status;
 
-   echo json_encode($response); return;
+   // echo json_encode($response); return;
    //    if($response === true){
    //       echo "<script> alert('User Created SUCCESSFULLY') ; location.replace('../view/user-list.php') </script>";
    //   }else{
@@ -80,10 +80,28 @@ if($_GET['action'] == 'login'){
 
    $response = $action->login($email, $password);
    
-   echo json_encode($response); return;
-
+   // echo json_encode($response); return;
    
 }
+
+if($_GET['action'] == 'change_password'){
+   $password = $action->validateInput($_POST['password']);
+   $user_id = $_POST['id'];
+   // echo json_encode($_POST); exit;
+   $result = $action->updatePassword($password, $user_id);
+   if($result === true){
+      $response['status'] = 1001;
+      $response['message'] = "Password Changed Successfully";
+   }else{
+      $response['status'] = 5017;
+      $response['message'] = "Password could not be changed. Pls Try Again";
+      $response['actual_error'] = $action->error;
+   }
+
+}
+
+
+echo json_encode($response); return;
 
 
 ?>

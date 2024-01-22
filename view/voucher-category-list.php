@@ -6,6 +6,7 @@ include '../controller/controller.php';
 $page_title = "Voucher Payment Category List";
 
 include 'header.php';
+include '../controller/session.php';
 include 'sidenav.php';
 
 if($_SESSION['user_type'] != 0 && $_SESSION['user_type'] != 1){?>

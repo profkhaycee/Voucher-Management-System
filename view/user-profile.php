@@ -5,6 +5,8 @@ include '../controller/controller.php';
 $page_title = "Create Voucher Payment Category";
 
 include 'header.php';
+include '../controller/session.php';
+
 include 'sidenav.php';
 
 if($_SESSION['id'] != $_GET['id']){?>

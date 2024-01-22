@@ -62,13 +62,14 @@
                 <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Reports</span></li>
 
                 <li class="nav-item">
-                    <a href="/report/journal" class="nav-link" data-key="t-payment-summary"> Journal Report</a>
+                    <a href="journal-report.php" class="nav-link" data-key="t-payment-summary"> Journal Report</a>
                 </li>
                 <li class="nav-item">
-                    <a href="/report/ledger" class="nav-link" data-key="t-sale-report"> Ledger Report </a>
+                    <a href="ledger-report.php" class="nav-link" data-key="t-sale-report"> Ledger Report </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/report/trial-balance" class="nav-link" data-key="t-expenses-report"> Trial Balance </a>
+                <a href="#" class="nav-link" data-key="t-expenses-report"> Trial Balance </a>
+                <!-- <a href="trial-balance.php" class="nav-link" data-key="t-expenses-report"> Trial Balance </a> -->
                 </li>
                 <?php if($_SESSION['isAdmin'] == 1 ){ ?>
                 <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Users</span></li>
