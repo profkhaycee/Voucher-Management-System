@@ -52,6 +52,8 @@
  <!-- password-addon init -->
  <script src="assets/js/pages/password-addon.init.js"></script>
 
+ <!-- number to words -->
+ <script src="assets/libs/multilingual-number-to-word/jquerySpellingNumber.js"></script>
 
 
 <!-- apexcharts -->
@@ -77,6 +79,10 @@
 <script src="assets/js/app.js"></script>
 
 <script>
+
+    // $(".selector").flatpickr(optional_config);
+    $(".flatpickr-input").flatpickr();
+
     $('.table-responsive .table-hover').DataTable({
         fixedHeader: {
             header: true,

@@ -3,15 +3,23 @@
 
 include '../controller/controller.php';
 
-$page_title = "Journal Report";
+$page_title = "Ledger Report";
 
 include 'header.php';
 include '../controller/session.php';
 
 include 'sidenav.php';
 
-$response = $action->fetchVoucher('all');
+$from_date = isset($_GET['from_date'])  ? $_GET['from_date'] : '';
+$to_date = isset($_GET['to_date'])  ? $_GET['to_date'] : '';
+$category = isset($_GET['payment_category'])  ? $_GET['payment_category'] : '';
+
+
+// $response = $action->fetchVoucher('all');
+$response = $action->fetchVoucherReport($from_date, $to_date, $category);
 // echo json_encode($_SESSION) . "<hr>"; echo $_SESSION['last_activity'] - time();
+// echo json_encode($response);
+
 if(is_array($response)){
     $tbody = " "; $arr_debit = []; $arr_credit = []; $total_debit = 0; $total_credit = 0;
     foreach($response as $data){
@@ -66,6 +74,37 @@ if(is_array($response)){
     <div class="col-xl-12">
         <div class="card mx-5">
             <div class="card-body">
+                <form class="filter-report mb-5 mt-2" style="border: 2px solid lightgray" action="ledger-report.php" method="get">
+                    <h3 class="text-center my-2 fw-bold">Filter Report</h3>
+                    <div class="row mx-1 my-3">
+                        <div class="col-lg-4">
+                            <div class="mb-2">
+                                <label for="date-field">From Date:</label>
+                                <input type="date" class="form-control bg-light border-0 flatpickr-input" name="from_date" id="" data-provider="flatpickr" data-time="true" placeholder="Select from Date">
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-2">
+                                <label for="date-field">To Date:</label>
+                                <input type="date" class="form-control bg-light border-0 flatpickr-input" name="to_date" id="date-field" data-provider="flatpickr" data-time="true" placeholder="Select To Date">
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label for="payment-category">Payment category</label>
+                            <div class="input-light">
+                                <select class="form-control bg-light border-0 w-100" data-choices data-choices-search-false id="payment-category" name="payment_category" >
+                                    <option value="" selected>Select Payment Category</option>
+                                    <?php foreach($action->fetchVoucherCategory('all') as $data){
+                                        echo "<option value='".$data['id']."'> ".$data['code']." - ".$data['name']." </option>";
+                                    } ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hstack gap-2 my-4 justify-content-center">
+                        <button type="submit" class="btn btn-primary px-4">FILTER</button>
+                    </div>
+                </form>
                 <div class="table-responsive table-card">
                     <table class="table table-hover table-striped table-bordered table-nowrap align-middle mb-2 p-1">
                         <thead class="table-dark">
@@ -102,6 +141,7 @@ if(is_array($response)){
         </div>
     </div>
 </div>
+
 
      
 

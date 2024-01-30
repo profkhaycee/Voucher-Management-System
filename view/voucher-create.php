@@ -10,7 +10,9 @@ include '../controller/session.php';
 
 include 'sidenav.php';
 
-if($_SESSION['user_type'] != 0 && $_SESSION['user_type'] != 1){?>
+// if($_SESSION['user_type'] != 0 && $_SESSION['user_type'] != 1){
+
+if(!in_array($_SESSION['user_type'],[0, 1, 5 ])){?>
     <script> 
         Swal.fire({icon:"error", title: "<h3 style='color:red'>Error</h3>", text:'YOU ARE NOT ALLOWED TO ACCESS THIS PAGE'}) ; 
         setTimeout(() => {location.replace('voucher-list.php'); }, 3000);
@@ -25,8 +27,8 @@ exit; }
             <div class="row justify-content-center">
                 <div class="col-xxl-9">
                     <div class="card">
-                        <form class="needs-validation" action="../model/voucher.php?action=create" method="post"  id="invoice_form">
-                        <!-- <form class="needs-validation"  id="voucher_form"> -->
+                        <!-- <form class="needs-validation" action="../model/voucher.php?action=create" method="post"  id="invoice_form"> -->
+                        <form class="needs-validation"  id="voucher-form" enctype="multipart/form-data">
                             <div class="card-body border-bottom border-bottom-dashed p-4">
                                 <div class="containerss">
                                     <div class="row">
@@ -68,11 +70,10 @@ exit; }
                                         <div class="col-lg-4">
                                             <div class="mb-2">
                                                 <label for="date-field">Date</label>
-                                                    <input type="date" class="form-control bg-light border-0 flatpickr-input" required name="voucher_date" id="date-field" data-provider="flatpickr" data-time="true" placeholder="Select Date">
-                                                    <div class="invalid-feedback">
-                                                        pick a valid date
-                                                    </div>
-                                                
+                                                <input type="date" class="form-control bg-light border-0 flatpickr-input" required name="voucher_date" id="date-field" data-provider="flatpickr" data-time="true" placeholder="Select Date">
+                                                <div class="invalid-feedback">
+                                                    pick a valid date
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-lg-4">
@@ -90,10 +91,18 @@ exit; }
                                         <div class="col-lg-4">
                                             <div class="form-checkr mb-2"> 
                                                 <label for="">Select voucher Type:</label><br>
-                                                <input class="form-check-input mx-3" required type="radio" name="voucher_type" id="voucher-type" value="Debit">
-                                                <label class="form-check-label" for="voucher-type">   Debit </label>
-                                                <input class="form-check-input mx-3" required type="radio" name="voucher_type" id="voucher-type" value="Credit">
-                                                <label class="form-check-label" for="voucher-type">   Credit   </label>
+                                                <?php if(in_array($_SESSION['user_type'], [0, 1])){ 
+                                                    $readonly = $_SESSION['user_type'] == 1 ?  'readonly checked' : '';
+                                                    // $checked = $_SESSION['user_type'] == 1 ?  'checked' : '';
+                                                ?>
+                                                <input class="form-check-input mx-3" required type="radio" name="voucher_type" id="voucher-type" <?= $readonly?> value="Debit" >
+                                                <label class="form-check-label" for="voucher-type">   Debit </label> 
+                                                <?php }if(in_array($_SESSION['user_type'], [0, 5])){ 
+                                                    $readonly = $_SESSION['user_type'] == 5 ?  'readonly checked' : '';
+                                                ?>
+                                                <input class="form-check-input mx-3" required type="radio" name="voucher_type" id="voucher-type" <?= $readonly?> value="Credit">
+                                                <label class="form-check-label" for="voucher-type">   Credit   </label> 
+                                                <?php } ?>
                                             </div>
                                         </div>
                                         <div class="col-12">
@@ -104,7 +113,37 @@ exit; }
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row justify-content-end my-3">
+                                    <div class="row my-4">
+                                        <div class="col-lg-8">
+                                            <div class="mb-3">
+                                                <label for="signature" class="form-label ">Upload Document 1 </label>
+                                                <input name="document1" id="doc1" data-feedback='feedback1'  class ="doc-attach form-control" type="file" accept=".doc, .docx, .pdf, .jpg, .jpeg, .png">
+                                                <h6 class="text-danger ">Note: Document must not be more than 2MB</h6>
+                                                <p class="feedback1"></p>
+                                            </div>
+                                        
+                                            <div class="mb-3">
+                                                <label for="signature" class="form-label ">Upload Document 2 </label>
+                                                <input name="document2" id="doc2" data-feedback='feedback2' class ="doc-attach form-control" type="file" accept=".doc, .docx, .pdf, .jpg, .jpeg, .png">
+                                                <h6 class="text-danger ">Note: Document must not be more than 2MB</h6>
+                                                <p class="feedback2"></p>
+                                            </div>
+                                        
+                                            <div class="mb-3">
+                                                <label for="signature" class="form-label ">Upload Document 3 </label>
+                                                <input name="document3" id="doc3" data-feedback='feedback3' class ="doc-attach form-control" type="file" accept=".doc, .docx, .pdf, .jpg, .jpeg, .png">
+                                                <h6 class="text-danger ">Note: Document must not be more than 2MB</h6>
+                                                <p class="feedback3"></p>
+                                            </div>
+                                        
+                                            <div class="mb-3">
+                                                <label for="signature" class="form-label">Upload Document 4 </label>
+                                                <input name="document4" id="doc4" data-feedback='feedback4' class ="doc-attach form-control" type="file" accept=".doc, .docx, .pdf, .jpg, .jpeg, .png">
+                                                <h6 class="text-danger ">Note: Document must not be more than 2MB</h6>
+                                                <p class="feedback4"></p>
+                                            </div>
+                                               
+                                        </div>
                                         <div class="col-lg-4">
                                             <div class="mb-3">
                                                 <label for="">Amount</label>
@@ -149,7 +188,29 @@ exit; }
 
 <script>
     $(document).ready(function(){
-        /***** calculate VTA, WHT, STAMP DUTY AND NET AMOUNT */
+
+        /******** check document size */
+        $(".doc-attach").on('change',function(){
+            var fb_class = $(this).attr('data-feedback');
+            console.log(fb_class)
+
+            var size = ((this.files[0].size)/1000000).toFixed(2)  ;
+            console.log(size);
+            if(size <= 2){
+                var classx = "bg-primary-subtle text-primary";
+                // $("#upload-signature").attr('disabled', false);
+            }else{
+                var classx =  "bg-danger-subtle text-danger" ;
+                $(this).val('')
+                // $("#upload-signature").attr('disabled', true);
+            }
+            // $("#feedback").html("<span class='p-2 "+classx+"'>file size : "+ size +" MB </span>");
+            // $(this).append("<br><br><span class='p-2 "+classx+"'>file size : "+ size +" MB </span>");
+            $("."+fb_class).html("<span class='p-2 "+classx+"'>file size : "+ size +" MB </span>");
+
+        });
+
+        /***** calculate VAT, WHT, STAMP DUTY AND NET AMOUNT */
         $("#amount").change(function(){
             var amount = $("#amount").val();
             // Swal.fire("amount changed to "+amount);
@@ -166,7 +227,40 @@ exit; }
         });
 
         /**** SUBMIT FORM */
-        // $("#voucher-form").submit(function(){})
+        $("#voucher-form").submit(function(e){
+            e.preventDefault();
+
+            var datat = new FormData(this);
+            // var datat = new FormData($("#voucher-form")[0]);
+            console.log(datat.get('email')); 
+            $.ajax({
+                url: "../model/voucher.php?action=create",
+                // dataType: 'json',
+                method: 'post',
+                processData: false,
+                contentType: false,
+                data: datat,    
+                success: function(res){
+                        var response = JSON.parse(res)
+                        console.log(res, response); 
+                        if(response.status == 1001){
+                            Swal.fire({icon:"success", title: "<h3 style='color:green'>Success</h3>", text:response.message});
+                            setTimeout(() => {location.replace("voucher-list.php");}, 3000);
+                            
+                        }else{
+                            // alert("failed");
+                            Swal.fire({icon:"error", title: "<h3 style='color:red'>Error</h3>", text:response.message});
+                        }
+
+                },
+                error: function(jqXHR, status, error){
+                    console.log(status, error);
+                    Swal.fire({icon:"error", title: "<h3 style='color:red'>Error</h3>", text:error});
+
+                }
+            })
+            
+        })
 
 
 

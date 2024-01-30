@@ -8,7 +8,7 @@ include 'header.php';
 include '../controller/session.php';
 include 'sidenav.php';
 
-if($_SESSION['user_type'] != 0 && $_SESSION['user_type'] != 1){?>
+if(!in_array($_SESSION['user_type'],[0, 1, 5 ])){?>
     <script> 
         Swal.fire({icon:"error", title: "<h3 style='color:red'>Error</h3>", text:'YOU ARE NOT ALLOWED TO ACCESS THIS PAGE'}) ; 
         setTimeout(() => {location.replace('voucher-list.php'); }, 3000);
@@ -70,20 +70,22 @@ $(document).ready(function(){
         // alert('clicked')
         if(categoryCode.length != '' && categoryName != ''){
             $.ajax({
-                url: "../model/payment_category.php",
+                url: "../model/payment_category.php?action=create",
                 dataType: 'json',
                 type: 'POST',
-                data: {category_code:categoryCode, category_name : categoryName, action:'create'},
+                data: {category_code:categoryCode, category_name : categoryName},
                 success: function(response){
                     if(response.status == 1001){
                         Swal.fire({icon:"success", title: "Success", text:"CATEGORY ADDED SUCCESSFULLY"});
-                        // setTimeout(() => {
-                        //     location.replace('../view/voucher-category-list.php')
-                        // }, 3000);
+                        setTimeout(() => {
+                            location.replace('voucher-category-list.php')
+                        }, 3000);
                         
                     }
+                },
+                error: function(xhr, status, error){
+                    Swal.fire({icon:"error", title: "<h3 style='color:red'>"+status+"</h3>", text: error+ " -- PLS CONTACT THE ADMINISTRATOR -- " });
                 }
-                // error: function(xhr, status)
 
             })
         }else{

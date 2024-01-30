@@ -2,6 +2,7 @@
 session_start();
 // include 'session.php';
 
+
  ini_set('display_errors', 1); ini_set('display_startup_errors', 1); error_reporting(E_ALL);
 
 class Controller extends mysqli{
@@ -39,10 +40,20 @@ class Controller extends mysqli{
         }
     }
 
-    public function createVoucher($payee_name, $payee_email, $payee_phone, $payee_address, $voucher_date, $payment_category, $voucher_type, $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator, $initiator_comment){
-        $voucher_no = $this->generateVoucherNo();
-        $sql = "INSERT INTO `voucher`(`payee_name`, `payee_email`, `payee_phone`, `payee_address`, `voucher_no`, `voucher_date`,  `payment_category`, `voucher_type`, `amount`, `vat`, `wht`, `stamp_duty`, `net_amount`, `initiator`,  `initiator_comment`) 
-                    VALUES('$payee_name', '$payee_email', '$payee_phone', '$payee_address', '$voucher_no', '$voucher_date', $payment_category, '$voucher_type', $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator, '$initiator_comment') ";
+    public function editVoucherCategory($code, $name, $id){
+        $sql = "update payment_category set code = '$code', name = '$name' where id = $id";
+        return $this->query($sql);
+    }
+
+    public function deleteVoucherCategory($id){
+        return $this->query("Delete from payment_category where id = $id");
+    }
+
+
+    public function createVoucher($payee_name, $payee_email, $payee_phone, $payee_address, $voucher_no, $voucher_date, $payment_category, $voucher_type, $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator, $initiator_comment, $doc1, $doc2, $doc3, $doc4){
+        // $voucher_no = $this->generateVoucherNo();
+        $sql = "INSERT INTO `voucher`(`payee_name`, `payee_email`, `payee_phone`, `payee_address`, `voucher_no`, `voucher_date`,  `payment_category`, `voucher_type`, `amount`, `vat`, `wht`, `stamp_duty`, `net_amount`, `initiator`,  `initiator_comment`, `document1`, `document2`, `document3`, `document4`) 
+                    VALUES('$payee_name', '$payee_email', '$payee_phone', '$payee_address', '$voucher_no', '$voucher_date', $payment_category, '$voucher_type', $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator, '$initiator_comment', '$doc1', '$doc2', '$doc3', '$doc4') ";
         $result = $this->query($sql);
         return $result;
 
@@ -62,7 +73,7 @@ class Controller extends mysqli{
             $sql = "update voucher set reviewer = $user, approval_level = $level, date_reviewed = '$date' where id = $voucher_id";
         }elseif($level == 3){
             // $sql = "update voucher set approver = $user, approval_level = $level, date_approved = '$date', approver_comment='$comment' where id = $voucher_id";
-            $sql = "update voucher set approver = $user, approval_level = $level, date_approved = '$date' where id = $voucher_id";
+            $sql = "update voucher set approver = $user, approval_level = $level, date_approved = '$date', is_paid = 1 where id = $voucher_id";
         }elseif($level == 4){
             $sql = "update voucher set rejected_by = $user, approval_level = $level, date_rejected = '$date', reject_reason='$reason' where id = $voucher_id";
         }
@@ -72,7 +83,7 @@ class Controller extends mysqli{
 
     public function fetchVoucher($id){
         $where = is_numeric($id) ? " where id = $id " : " ";
-        $result = $this->query("select * from voucher $where ORDER BY id DESC");
+        $result = $this->query("select * from voucher $where ORDER BY created_at DESC");
         $data = [];
         if($result->num_rows > 0){
             while($row = $result->fetch_assoc()){
@@ -125,9 +136,20 @@ class Controller extends mysqli{
         }
     }
 
-    public function createUser($firstname, $lastname, $email, $phone, $password, $userType, $imgPath){
-        $sql = " INSERT INTO `users`(`first_name`, `last_name`, `email`, `password`, `phone`, `user_type`, `signature`) VALUES ('$firstname', '$lastname', '$email', '$password', '$phone', $userType, '$imgPath' ) ";
+    public function createUser($firstname, $lastname, $email, $phone, $password, $userType){
+        $sql = " INSERT INTO `users`(`first_name`, `last_name`, `email`, `password`, `phone`, `user_type`) VALUES ('$firstname', '$lastname', '$email', '$password', '$phone', $userType ) ";
         $result = $this->query($sql);
+        return $result;
+    }
+
+    public function updateUser($firstname, $lastname, $email, $phone, $id){
+        $sql = " update users set first_name = '$firstname', last_name = '$lastname', email = '$email', phone =  '$phone' where id = $id  and isActive = 1";
+        $result = $this->query($sql);
+        return $result;
+    }
+
+    public function updateSignature($signature, $id){
+        $result = $this->query(" update users set signature = '$signature' where id = $id  and isActive = 1");
         return $result;
     }
 
@@ -189,6 +211,15 @@ class Controller extends mysqli{
         }
     }
 
+    public function activateUser($isActive, $user_id){
+        $result = $this->query("update users set isActive = $isActive where id = $user_id");
+        return $result;
+    }
+
+    public function resetPassword($user_id){
+        return   $this->query(" update users set password = '12345', password_changed = 0 where id = $user_id ");
+    }
+
     public function fetchJournalReport(){
         $result = $this->query(" select * from voucher where is_paid = 1 order by created_at desc ");
         $data = [];
@@ -203,6 +234,29 @@ class Controller extends mysqli{
 
 
     }
+
+    public function fetchVoucherReport($from_date, $to_date, $category){
+        $sql = " select * from voucher where is_paid != 10  ";
+        $from = ($from_date != '') ? " and date(voucher_date) >= '$from_date' " : ' ';
+        $to = ($to_date != '') ? " and date(voucher_date) <= '$to_date' " : ' ';
+        $paycat = ($category != '') ? " and payment_category = $category " : ' ';
+        $query = "$sql $from $to $paycat order by id desc "; //return $query;
+        // $result = $this->query(" $sql $from $to $paycat  order by created_at desc ");
+        $result = $this->query($query);
+        $data = [];
+        if($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $data[] = $row;
+            }
+            return $data;
+        }else{
+            return "No Data to fetch";
+        }
+
+
+    }
+
+    
 
     
 

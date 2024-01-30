@@ -8,12 +8,13 @@ include 'header.php';
 include '../controller/session.php';
 include 'sidenav.php';
 
+
 $voucher_id = $_GET['id'];
 
 $data = $action->fetchVoucher($voucher_id)[0];
 if(is_array($data)){
 
-    if(($data['approval_level'] != 1 && $_SESSION['user_type'] != 1) || $_SESSION['user_type'] != 1){
+    if(($data['approval_level'] != 1 && !in_array($_SESSION['user_type'], [1, 0]) ) || !in_array($_SESSION['user_type'], [1, 0])){
         $readonly = "readonly";
     }else{
         $readonly = "";
@@ -49,13 +50,14 @@ if(is_array($data)){
     <div class="row justify-content-center">
         <div class="col-xxl-9">
             <div class="card">
-                <form class="needs-validation" action="../model/voucher.php?action=edit&id=<?= $voucher_id ?>" method="post"  id="invoice_form">
+                <!-- <form class="needs-validation" action="../model/voucher.php?action=edit&id=<?//= $voucher_id ?>" method="post"  id="invoice_form"> -->
+                <form class="needs-validation" id="voucher-edit-form">
                     <div class="card-body border-bottom border-bottom-dashed p-4">
                         <div class="containerss">
                             <div class="row">
                                 <div class="col-12">
                                     <div class="form-group mb-2">
-                                        <label for="payee-name">Payee Name <?= $_SESSION['user_type'] ?></label>
+                                        <label for="payee-name">Payee Name </label>
                                         <input type="text" class="form-control bg-light border-0" required <?php echo $readonly; ?> name="payee_name" value="<?= $data['payee_name'] ?>" id="payee-name" placeholder="Enter Full Name of Payee">
                                     </div>
                                     
@@ -228,6 +230,22 @@ if(is_array($data)){
 
 <script>
 $(document).ready(function(){
+
+    $("#amount").change(function(){
+        var amount = $("#amount").val();
+        // Swal.fire("amount changed to "+amount);
+        var vat = ((7.5/100) * amount).toFixed(2); 
+        var wht = ((7.5/100) * amount).toFixed(2); 
+        var stamp_duty = ((5/100) * amount).toFixed(2); 
+        var net_amount = (amount - (Number(vat) + Number(wht) + Number(stamp_duty))).toFixed(2);
+
+        $("#vat").val(vat);
+        $("#wht").val(wht);
+        $("#stamp_duty").val(stamp_duty);
+        $("#net_amount").val(net_amount);
+
+    });
+
     $(".level-btn").on('click', function(){
         var action = $(this).attr('data-action');
         console.log(action);
@@ -248,7 +266,7 @@ $(document).ready(function(){
             url: "../model/voucher.php?action="+action+"&id=<?=$voucher_id?>",
             type: 'POST',
             dataType: 'json',
-            // data: {voucher_no: "<?=$data['voucher_no']?>"},
+            // data: {voucher_no: "<?//=$data['voucher_no']?>"},
             data: data,
             success: function(response){
                 console.log(response, response.status);
@@ -265,6 +283,44 @@ $(document).ready(function(){
 
         })
     })
+
+
+     /**** SUBMIT FORM */
+    $("#voucher-edit-form").submit(function(e){
+            e.preventDefault();
+
+            var datat = new FormData(this);
+            // var datat = new FormData($("#voucher-form")[0]);
+            console.log(datat.get('email')); 
+            $.ajax({
+                url: "../model/voucher.php?action=edit&id=<?= $voucher_id ?>",
+                // dataType: 'json',
+                method: 'post',
+                processData: false,
+                contentType: false,
+                data: datat,    
+                success: function(res){
+                        var response = JSON.parse(res)
+                        console.log(res, response);
+                        if(response.status == 1001){
+                            Swal.fire({icon:"success", title: "<h3 style='color:green'>Success</h3>", text:response.message});
+                            setTimeout(() => {location.replace("voucher-list.php");}, 3000);
+                            
+                        }else{
+                            // alert("failed");
+                            Swal.fire({icon:"error", title: "<h3 style='color:red'>Error</h3>", text:response.message});
+                        }
+
+                },
+                error: function(jqXHR, status, error){
+                    console.log(status, error);
+                    Swal.fire({icon:"error", title: "<h3 style='color:red'>Error</h3>", text:error});
+
+                }
+            })
+            
+    })
+
     /*
     $("#btn-reviewed").click(function(){
     // $("#btn-reviewed").on('clcik', function(){

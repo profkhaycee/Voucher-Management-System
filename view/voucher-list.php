@@ -10,6 +10,7 @@ include '../controller/session.php';
 
 include 'sidenav.php';
 
+
 $response = $action->fetchVoucher('all');
 // echo json_encode($_SESSION) . "<hr>"; echo $_SESSION['last_activity'] - time();
 if(is_array($response)){
@@ -40,8 +41,8 @@ if(is_array($response)){
                         <td>'.$data['payee_name'].'</td>
                         <td>'.$cat_str.'</td>
                         <td>'.$data['voucher_type'].'</td>
-                        <td>₦'.number_format($data['amount']).'</td>
-                        <td>₦'.number_format($data['net_amount']).'</td>
+                        <td>₦'.number_format($data['amount'], 2).'</td>
+                        <td>₦'.number_format($data['net_amount'], 2).'</td>
                         <td>'.$level_str.'</td>
                         <td>'.$paid_str.'</td>
                         <td> 
@@ -91,7 +92,7 @@ if(is_array($response)){
             <div class="card-body">
                 <div class="table-responsive table-card">
                     <table class="table table-hover table-striped table-bordered table-nowrap align-middle mb-0">
-                        <thead class="table-dark">
+                        <thead class="table-primary">
                             <tr class="text-muted text-uppercase">
                                 <!-- <th style="width: 50px;">
                                     <div class="form-check">

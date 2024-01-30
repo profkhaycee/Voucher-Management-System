@@ -46,7 +46,7 @@
                 <li class="nav-item">
                     <a href="voucher-list.php" class="nav-link" data-key="t-invoice"> View Vouchers </a>
                 </li>
-                <?php if($_SESSION['isAdmin'] == 1 || $_SESSION['user_type'] == 1){?>
+                <?php if(in_array($_SESSION['user_type'],[0, 1, 5 ])){?>
                 <li class="nav-item">
                     <a href="voucher-create.php" class="nav-link" data-key="t-add-invoice"> Create Voucher </a>
                 </li>

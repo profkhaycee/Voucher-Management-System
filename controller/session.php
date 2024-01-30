@@ -1,9 +1,33 @@
 <?php
 // session_start();
 
-$timeout = 3000; // 
+$timeout = 1800; // 
 
 if(isset($_SESSION['email'])){
+
+  if($_SESSION['isActive'] != 1){?>
+    <script> 
+         Swal.fire({icon:"error", title: "<h3 style='color:red'>PROFILE DEACTIVATED</h3>", text:'CONTACT ADMINISTRATOR TO ENABLE YOUR USER PROFILE'}) ; 
+         setTimeout(() => {location.replace('logout.php'); }, 3000);
+     </script>
+                  
+     <?php 
+     exit;
+  }
+
+  if(isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $timeout)) {
+    //  echo "<script> alert('--- YOU HAVE BEEN LOGGED OUT DUE TO INACTIVITY  ---- ') ; location.replace('logout.php'); </script>";  ?>
+    <script> 
+         Swal.fire({icon:"error", title: "<h3 style='color:red'>Error</h3>", text:'YOU HAVE BEEN LOGGED OUT DUE TO INACTIVITY'}) ; 
+         setTimeout(() => {location.replace('logout.php'); }, 3000);
+     </script>
+                  
+     <?php 
+     exit; 
+  }
+  $_SESSION['last_activity'] = time(); 
+
+
 
   if(isset($_SESSION['password_changed']) && $_SESSION['password_changed'] == 0){
     $url = "change-password.php?id=". $_SESSION['id'];
@@ -17,18 +41,19 @@ if(isset($_SESSION['email'])){
     exit; 
   }
 
-  if(isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $timeout)) {
-    //  echo "<script> alert('--- YOU HAVE BEEN LOGGED OUT DUE TO INACTIVITY  ---- ') ; location.replace('logout.php'); </script>";  ?>
+  if(isset($_SESSION['signature']) && trim($_SESSION['signature']) == ''){
+    $url = "user-profile.php?id=". $_SESSION['id'];
+    ?>
     <script> 
-         Swal.fire({icon:"error", title: "<h3 style='color:red'>Error</h3>", text:'YOU HAVE BEEN LOGGED OUT DUE TO INACTIVITY'}) ; 
-         setTimeout(() => {location.replace('logout.php'); }, 3000);
-     </script>
-                  
-     <?php 
-     exit; 
+      Swal.fire({icon:"warning", title: "<h3 style='color:red'>Signature is Empty</h3>", text:'PLEASE UPLOAD YOUR SIGNATURE'}) ; 
+      setTimeout(() => {location.replace('<?= $url ?>'); }, 3000);
+    </script>
+              
+    <?php 
+    exit; 
   }
-  $_SESSION['last_activity'] = time();
 
+ 
 }else{ 
   // header("Location: login.php?session=expire");
 
