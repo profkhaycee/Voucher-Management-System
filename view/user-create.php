@@ -102,8 +102,9 @@ $(document).ready(function(){
             contentType: false,
             processData: false,
             data: datat,
-            success: function(response){
-                console.log(response);
+            success: function(resp){
+                console.log(resp);
+                var response = JSON.parse(resp)
                 if(response.status == 1001){
                     Swal.fire({icon:"success", title: "<h3 style='color:green'>Success</h3>", text:response.message});
                     setTimeout(() => {

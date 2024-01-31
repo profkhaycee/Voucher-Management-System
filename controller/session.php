@@ -40,8 +40,12 @@ if(isset($_SESSION['email'])){
     <?php 
     exit; 
   }
+  // var_dump($_SESSION);
 
-  if(isset($_SESSION['signature']) && trim($_SESSION['signature']) == ''){
+  // if(isset($_SESSION['signature'])  && empty(trim($_SESSION['signature']))){
+    if(empty(trim($_SESSION['signature']))){
+      // var_dump($_SESSION);
+
     $url = "user-profile.php?id=". $_SESSION['id'];
     ?>
     <script> 

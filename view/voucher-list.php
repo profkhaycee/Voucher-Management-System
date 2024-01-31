@@ -36,7 +36,7 @@ if(is_array($response)){
 
         $tbody .= '<tr>
                         
-                        <td>'.$data['voucher_date'].'</td>
+                        <td>'.$data['created_at'].'</td>
                         <td>'.$data['voucher_no'].'</td>
                         <td>'.$data['payee_name'].'</td>
                         <td>'.$cat_str.'</td>
@@ -99,7 +99,7 @@ if(is_array($response)){
                                         <input class="form-check-input" type="checkbox" id="checkAll" value="option">
                                     </div>
                                 </th> -->
-                                <th scope="col">Voucher Date</th>
+                                <th scope="col">Created Date</th>
                                 <th scope="col">Voucher No</th>
                                 <th scope="col">Payee Name</th>
                                 <th scope="col" style="width: 20%;">Payment Category</th>

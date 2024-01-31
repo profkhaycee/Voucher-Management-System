@@ -47,6 +47,7 @@
 
 <?php 
 // include '../controller/session.php';
+$user = $action->fetchUser($_SESSION['id'])[0]
 ?>
 
     <!-- Begin page -->
@@ -104,7 +105,7 @@
                             <span class="d-flex align-items-center">
                                 <!-- <img class="rounded-circle header-profile-userx" src="assets/images/users/avatar-4.jpg" alt="Header Avatar"> -->
                                 <span class="text-start ms-xl-2">
-                                    <span class="d-inline-block fw-medium user-name-text fs-16"><?= $_SESSION['first_name'] ?> <i class="las la-angle-down fs-12 ms-1"></i></span>
+                                    <span class="d-inline-block fw-medium user-name-text fs-16"><?= $user['first_name'] ?> <i class="las la-angle-down fs-12 ms-1"></i></span>
                                 </span>
                             </span>
                         </button>

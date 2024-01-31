@@ -6,9 +6,9 @@ include '../controller/controller.php';
 $page_title = "Create Voucher";
 
 include 'header.php';
-include '../controller/session.php';
 
 include 'sidenav.php';
+include '../controller/session.php';
 
 // if($_SESSION['user_type'] != 0 && $_SESSION['user_type'] != 1){
 
@@ -147,7 +147,7 @@ exit; }
                                         <div class="col-lg-4">
                                             <div class="mb-3">
                                                 <label for="">Amount</label>
-                                                <input type="number" class="form-control bg-light border-0" required name="amount" id="amount" placeholder="Enter Amount">
+                                                <input type="number" class="form-control bg-light border-0" required name="amount" id="amount" placeholder="Enter Amount" step="0.01">
                                             </div>
                                             <div>
                                                 <label for="">VAT</label>

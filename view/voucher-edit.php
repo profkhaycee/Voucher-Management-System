@@ -113,21 +113,62 @@ if(is_array($data)){
                                     </div>
                                 </div>
                                 
-                                <div class="col-lg-4">
+                                <!-- <div class="col-lg-4">
                                     <div class="form-checkr mb-2"> 
                                         <label for="">Select voucher Type:</label><br>
-                                        <input class="form-check-input mx-3" required <?php echo $readonly; ?> type="radio" name="voucher_type" id="voucher-type" value="Debit" <?php if($data['voucher_type'] == "Debit") echo  "checked" ?>>
+                                        <input class="form-check-input mx-3" required  type="radio" name="voucher_type" id="voucher-type" value="Debit" <?php// if($data['voucher_type'] == "Debit") echo  "checked" ?> readonly>
                                         <label class="form-check-label" for="voucher-type">   Debit </label>
-                                        <input class="form-check-input mx-3" required <?php echo $readonly; ?> type="radio" name="voucher_type" id="voucher-type" value="Credit" <?php if($data['voucher_type'] == "Credit") echo  "checked" ?>>
+                                        <input class="form-check-input mx-3" required type="radio" name="voucher_type" id="voucher-type" value="Credit" <?php// if($data['voucher_type'] == "Credit") echo  "checked" ?> readonly>
                                         <label class="form-check-label" for="voucher-type">   Credit   </label>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-12">
                                     <!-- Example Textarea -->
                                     <div>
                                         <label for="exampleFormControlTextarea5" class="form-label">Initiator's Comment</label>
                                         <textarea class="form-control" id="exampleFormControlTextarea5" <?php echo $readonly; ?> rows="3" placeholder="Do you want to make any Comment?" name="initiator_comment"><?php echo $data['initiator_comment']; ?></textarea>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="p-4">
+                                    <h4 class="fw-bold my-3"> Attached Documents</h4>
+                                    <?php if(empty($data['document1']) && empty($data['document2']) && empty($data['document3']) && empty($data['document4']) ){
+                                            echo "<h5 class='text-center'>NO ATTACHED DOCUMENT</h5>";
+                                        }else{?>
+                                            <div class="m-3 hstack gap-5 flex-wrap justify-content-center">
+                                                <?php if(!empty($data['document1'])){?>
+                                                <div>
+                                                    <span class="d-block ms-3" style="margin-bottom:-25px !important">Document 1</span>
+                                                    <i class="ri-file-text-line" style="color: gray;font-size:100px"></i>
+                                                    <a href="<?=$data['document1']?>" target="_blank" class="text-info d-block ms-3 fs-20" style="margin-top:-25px !important"><u>View</u> </a>
+                                                </div>
+                                                <?php }
+                                                if(!empty($data['document2'])){?>
+                                                <div>
+                                                    <span class="d-block ms-3" style="margin-bottom:-25px !important">Document 2</span>
+                                                    <i class="ri-file-text-line" style="color: gray;font-size:100px"></i>
+                                                    <a href="<?=$data['document2']?>" target="_blank" class="text-info d-block ms-3 fs-20" style="margin-top:-25px !important"><u>View</u> </a>
+                                                </div>
+                                                <?php }
+                                                if(!empty($data['document3'])){?>
+                                                <div>
+                                                    <span class="d-block ms-3" style="margin-bottom:-25px !important">Document 3</span>
+                                                    <i class="ri-file-text-line" style="color: gray;font-size:100px"></i>
+                                                    <a href="<?=$data['document3']?>" target="_blank" class="text-info d-block ms-3 fs-20" style="margin-top:-25px !important"><u>View</u> </a>
+                                                </div>
+                                                <?php }
+                                                if(!empty($data['document4'])){?>
+                                                <div>
+                                                    <span class="d-block ms-3" style="margin-bottom:-25px !important">Document 4</span>
+                                                    <i class="ri-file-text-line" style="color: gray;font-size:100px"></i>
+                                                    <a href="<?=$data['document4']?>" target="_blank" class="text-info d-block ms-3 fs-20" style="margin-top:-25px !important"><u>View</u> </a>
+                                                </div>
+                                                <?php } ?>
+                                            
+                                            </div>
+                                        <?php }
+                                    ?>
                                 </div>
                             </div>
                             <div class="row my-3">
@@ -177,6 +218,7 @@ if(is_array($data)){
                                 </div>
                                 
                             </div>
+                            
                         </div>
                       
                     </div>
@@ -185,7 +227,7 @@ if(is_array($data)){
                         
                         <div class="hstack gap-2 justify-content-end d-print-none mt-4">
                             <?php if($data['approval_level'] == 1 && ($_SESSION['user_type'] == 1 || $_SESSION['user_type'] == 0)){?>
-                            <button type="submit" class="btn btn-info btn-submit"><i class="ri-printer-line align-bottom me-1"></i> Save</button>
+                            <button type="submit" class="btn btn-info btn-submit"><i class="ri-save-line align-bottom me-1"></i> Save</button>
                             <?php } if($data['approval_level'] == 1 && ($_SESSION['user_type'] == 2  || $_SESSION['user_type'] == 0)){?>
                                 <button type="button" class="btn btn-primary level-btn" id="btn-reviewed" data-action='reviewed'> <i class="ri-check-fill align-bottom me-1 fw-bold"> </i>Reviewed</button>
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reject-modal" data-action='rejected'> <i class="ri-close-line me-1 fw-bold"></i> Reject </button>
@@ -265,14 +307,15 @@ $(document).ready(function(){
         $.ajax({
             url: "../model/voucher.php?action="+action+"&id=<?=$voucher_id?>",
             type: 'POST',
-            dataType: 'json',
+            // dataType: 'json',
             // data: {voucher_no: "<?//=$data['voucher_no']?>"},
             data: data,
-            success: function(response){
+            success: function(resp){
+                var response = JSON.parse(resp)
                 console.log(response, response.status);
                 if(response.status == 1001){
                     Swal.fire({icon:"success", title: "<h3 style='color:green'>Success</h3>", text:response.message});
-                    setTimeout(() => {location.replace("../view/voucher-view.php?id=<?= $voucher_id ?>");}, 3000);
+                    setTimeout(() => {location.replace("voucher-view.php?id=<?= $voucher_id ?>");}, 3000);
                     
                 }else{
                     // alert("failed");

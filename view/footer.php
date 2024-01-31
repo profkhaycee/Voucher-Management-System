@@ -84,6 +84,7 @@
     $(".flatpickr-input").flatpickr();
 
     $('.table-responsive .table-hover').DataTable({
+        order:[[0, 'desc']],
         fixedHeader: {
             header: true,
             footer: true

@@ -16,7 +16,6 @@ if(is_array($response)){
     $data = $response[0];
     $category = $action->fetchVoucherCategory($data['payment_category'])[0];
     $voucher_date = date("l M d, Y",strtotime($data['voucher_date']));
-    $f_year = date('Y', strtotime($data['voucher_date']));
 
     if($data['is_paid'] == 1){
         $paid_str = '<span class="badge bg-primary p-2">Paid</span>';
@@ -70,26 +69,25 @@ if(is_array($response)){
     
 
 <div class="row justify-content-center">
-    <div class="col-xl-9">
+    <div class="col-xxl-9">
         <div class="card" id="demo">
                 <div class="card-body">
-                    <div class="row border-bottom-2 border-bottom-solid my-1">
-                        <div class="col-lg-1 text-center">
-                            <span class="logo-lg px-3">
+                    <div class="row border-bottom-2 border-bottom-solid my-3">
+                        <div class="col-1">
+                            <span class="logo-lg px-3 px">
                                 <img src="assets/images/logo-dark.png" alt="" height="50" width="100">
                             </span>
                         </div>
-                        <div class="col-lg-11">
+                        <div class="col-11">
                             <h3 class="text-center fw-bold"><span class="ms-3">NIGERIA ARABIC LANGUAGE VILLAGE, NGALA </span> </h3>
                             <p class="text-center">(Inter-University Centre for Arabic Studies)</p>
                         </div>
                         <hr class="border-4">
                     </div>
-                    <div class="row px-4 py-1">
-                        <div class="col-md-6">
-                            <h6 class="fw-semibold mb-2">Voucher No: <?php echo $data['voucher_no'] ; ?>  </h6>
-                            <h6 class="fw-semibold mb-2">Category: <?php echo $category['code']."-". $category['name'] ; ?></h6>
-                            <h6 class="mb-2 fw-medium">Voucher Date: <?= $voucher_date ?> </h6>
+                    <div class="row p-4">
+                        <div class="col-6">
+                            <h5 class="fw-bold mb-2">Voucher: <?php echo $data['voucher_no']."/".$category['code']."-". $category['name'] ; ?>  </h5>
+                            <h6 class="mb-2">Voucher Date: <?= $voucher_date ?> </h6>
                             <!-- <div class="row g-4"> -->
                                 
                                 <!--end col-->
@@ -110,15 +108,14 @@ if(is_array($response)){
                                 <!--end col-->
                             <!-- </div> -->
                         </div>
-                        <div class="col-md-3">
-                            <p class="text-muted mb-1 text-uppercase fw-semibold fs-14">Phase</p>
+                        <div class="col-3">
+                            <p class="text-muted mb-1 text-uppercase fw-medium fs-14">Phase</p>
                             <?=$level_str?>
                             
                         </div>
-                        <div class="col-md-3">
-                            <p class="text-muted mb-1 text-uppercase fw-semibold fs-14">Payment Status</p>
+                        <div class="col-3">
+                            <p class="text-muted mb-1 text-uppercase fw-medium fs-14">Payment Status</p>
                             <?=$paid_str?>
-                            <p class="fw-bolder pt-1 text-primary">Financial Year: <?=$f_year?> </p>
                             
                         </div>
                     </div><!--end col-->
@@ -135,8 +132,8 @@ if(is_array($response)){
                                 <!--end col-->
                                 <div class="col-6">
                                     <h6 class="text-muted text-uppercase fw-semibold mb-3"> Payee Info </h6>
-                                    <!-- <p class="fw-medium mb-2" id="shipping -name">Name: <?php //echo $data['payee_name']; ?></p> -->
-                                    <p class="text-muted mb-1" id="shipping-address-line-1">Address: <?php echo $data['payee_address']; ?></p>
+                                    <p class="fw-medium mb-2" id="shipping-name"><?php echo $data['payee_name']; ?></p>
+                                    <p class="text-muted mb-1" id="shipping-address-line-1"><?php echo $data['payee_address']; ?></p>
                                     <p class="text-muted mb-1"><span>Phone: </span><span id="shipping-phone-no"><?php echo $data['payee_phone']; ?></span></p>
                                     <p class="text-muted mb-1"><span>Email: </span><span id="shipping-phone-no"><?php echo $data['payee_email']; ?></span></p>
                                 </div>
@@ -148,91 +145,12 @@ if(is_array($response)){
                         <div class="col-lg-3">
                             <h6 class="text-muted text-uppercase fw-semibold mb-3">Net Amount</h6>
                             <h3 class="fw-bold mb-4">₦<?php echo number_format($data['net_amount'], 2); ?></h3>
-                            <h4 class="fw-bolder text-primary"><?= $data['voucher_type'] ?></h4>
+                            <h5 class="fw-bold"><?= $data['voucher_type'] ?></h5>
                         </div>
 
                     </div>
 
-
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card-body p-4">
-                                <div class="table-responsive">
-                                    <h4 class="mx-lg-2 fw-bolder">PAYEE: <?php echo $data['payee_name']; ?> </h4>
-                                    <table class="table table-bordered text-center align-middle mb-0">
-                                        <thead>
-                                            <tr class="table-active">
-                                                <th scope="col">Particulars</th>
-                                                <th></th>
-                                                <th scope="col">Value</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="products-list">
-                                            <tr class="">
-                                                <td class="text-start pt-3 pb-5">
-                                                    <?= $data['initiator_comment'] ?>
-                                                </td>
-                                                <td>Amount</td>
-                                                <td>₦<?php echo number_format($data['amount'], 2); ?></td>
-                                                
-                                            </tr>
-                                            <tr>
-                                               <td></td>
-                                               <td>VAT</td>
-                                               <td>₦<?php echo number_format($data['vat'], 2); ?></td> 
-                                            </tr>
-                                            <tr>
-                                               <td></td>
-                                               <td>WHT</td>
-                                               <td>₦<?php echo number_format($data['wht'], 2); ?></td> 
-                                            </tr>
-                                            <tr>
-                                               <td></td>
-                                               <td>Stamp Duty</td>
-                                               <td>₦<?php echo number_format($data['stamp_duty'], 2); ?></td> 
-                                            </tr>
-                                            <tr>
-                                               <td></td>
-                                               <td><h4 class="fw-bold">Total</h4></td>
-                                               <td><h4 class="fw-bold">₦<?php echo number_format($data['net_amount'], 2); ?></h4></td> 
-                                            </tr>
-
-                                           
-                                        </tbody>
-                                    </table><!--end table-->
-                                </div>
-
-                                <div class="words mx-3 mt-4">
-                                    <h5> Total Amount in Words: <span class="amount_words fw-bold"></span> </h5>
-                                </div>
-                                
-                                
-                            </div>
-                            <!--end card-body-->
-                        </div><!--end col-->
-                    </div>
-                    
-                    <div class="border-top border-top-dashed pt-4">
-                        <h4 class="fw-bold my-3"> Attached Documents</h4>
-                        <?php if(empty($data['document1']) && empty($data['document2']) && empty($data['document3']) && empty($data['document4']) ){
-                                echo "<h5 class='text-center'>NO ATTACHED DOCUMENT</h5>";
-                            }else{?>
-                                     <div class="h-stack">
-                                       
-                                    </div>
-                            <?php }
-                        ?>
-                        <div class="row m-3">
-                            <div class="col-lg-3 col-md-6"></div>
-                            <div class="col-lg-3 col-md-6"></div>
-                            <div class="col-lg-3 col-md-6"></div>
-                            <div class="col-lg-3 col-md-6"></div>
-                        </div>
-                    </div>
-
-                   
-
-                    <div class="row  mt-5 border-top border-top-dashed">
+                    <div class="row border-top border-top-dashed">
                         <div class="col-lg-6 me-5">
                             <div class="initiator border-bottom border-bottom-solid ms-3 mt-2">
                                 <h6 class="text-muted d-md-inline text-uppercase fw-semibold mb-3"> Initiated By: </h6>
@@ -269,34 +187,44 @@ if(is_array($response)){
                             <div class="card-body">
                                 
                                 <div class="">
-                                    <!-- <table class="table table-borderless table-nowrap align-middle mb-0 ms-auto" style="width:250px">
+                                    <table class="table table-borderless table-nowrap align-middle mb-0 ms-auto" style="width:250px">
                                         <tbody>
                                             <tr>
                                                 <td>Amount</td>
-                                                <td class="text-end">₦<?php //echo number_format($data['amount']); ?></td>
+                                                <td class="text-end">₦<?php echo number_format($data['amount'], 2); ?></td>
                                             </tr>
                                             <tr>
                                                 <td>VAT</td>
-                                                <td class="text-end">₦<?php //echo number_format($data['vat']); ?></td>
+                                                <td class="text-end">₦<?php echo number_format($data['vat'], 2); ?></td>
                                             </tr>
                                             <tr>
                                                 <td>WHT</td>
-                                                <td class="text-end">₦<?php //echo number_format($data['wht']); ?></td>
+                                                <td class="text-end">₦<?php echo number_format($data['wht'], 2); ?></td>
                                             </tr>
                                             <tr>
                                                 <td>STAMP DUTY</td>
-                                                <td class="text-end">₦<?php //echo number_format($data['stamp_duty']); ?></td>
+                                                <td class="text-end">₦<?php echo number_format($data['stamp_duty'], 2); ?></td>
                                             </tr>
                                             <tr class="border-top border-top-dashed fs-15">
                                                 <th scope="row">Net Amount</th>
-                                                <th class="text-end">₦<?php //echo number_format($data['net_amount']); ?></th>
+                                                <th class="text-end">₦<?php echo number_format($data['net_amount'], 2); ?></th>
                                             </tr>
                                         </tbody>
-                                    </table> -->
+                                    </table>
                                     <!--end table-->
                                 </div>
                                 
-                             
+                                <!-- <div class="mt-4">
+                                    <div class="alert alert-info">
+                                        <p class="mb-0"><span class="fw-semibold">NOTES:</span>
+                                            <span id="note">All accounts are to be paid within 7 days from receipt of invoice. To be paid by cheque or
+                                                credit card or direct payment online. If account is not paid within 7
+                                                days the credits details supplied as confirmation of work undertaken
+                                                will be charged the agreed quoted fee noted above.
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div> -->
                                 
                             </div>
                             <!--end card-body-->
@@ -311,28 +239,6 @@ if(is_array($response)){
     </div>
     <!--end col-->
 </div>
-
-<script>
-    $(document).ready(function(){
-        var total_amount = <?=$data['net_amount']?>;
-        var options_sn = {
-            noAnd: true,
-            lang: "en",
-            wholesUnit: "Naira",
-            fractionUnit: "Kobo",
-            digitsLengthW2F: 2,
-            decimalSeperator: ""
-        };
-
-        var words = $.spellingNumber(total_amount, options_sn);
-        var amount_words = words.replaceAll('hundred', 'hundred and');
-        $('.amount_words').html(amount_words);
-
-        // var words = $.spellingNumber(1234567890.87, options_sn);
-        // console.log(amount_words);
-        // console.log(amount_words.replaceAll('hundred', 'hundred and'));
-    })
-</script>
 
 <?php
 

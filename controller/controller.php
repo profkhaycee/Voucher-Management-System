@@ -3,7 +3,7 @@ session_start();
 // include 'session.php';
 
 
- ini_set('display_errors', 1); ini_set('display_startup_errors', 1); error_reporting(E_ALL);
+//  ini_set('display_errors', 1); ini_set('display_startup_errors', 1); error_reporting(E_ALL);
 
 class Controller extends mysqli{
 
@@ -60,8 +60,8 @@ class Controller extends mysqli{
     }
 
 
-    public function editVoucher($voucher_id, $payee_name, $payee_email, $payee_phone, $payee_address, $voucher_date, $payment_category, $voucher_type, $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator, $initiator_comment){
-        $sql = " UPDATE `voucher` SET `payee_name`='$payee_name',`payee_address`='$payee_address',`payee_email`='$payee_email',`payee_phone`='$payee_phone', `voucher_date`='$voucher_date',`voucher_type`='$voucher_type',`payment_category`=$payment_category,`amount`=$amount,`vat`=$vat,`wht`=$wht,`stamp_duty`=$stamp_duty,`net_amount`=$net_amount,`initiator_comment`='$initiator_comment' where id = $voucher_id ";
+    public function editVoucher($voucher_id, $payee_name, $payee_email, $payee_phone, $payee_address, $voucher_date, $payment_category, $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator, $initiator_comment){
+        $sql = " UPDATE `voucher` SET `payee_name`='$payee_name',`payee_address`='$payee_address',`payee_email`='$payee_email',`payee_phone`='$payee_phone', `voucher_date`='$voucher_date',`payment_category`=$payment_category,`amount`=$amount,`vat`=$vat,`wht`=$wht,`stamp_duty`=$stamp_duty,`net_amount`=$net_amount,`initiator_comment`='$initiator_comment' where id = $voucher_id ";
         $result = $this->query($sql);
         return $result;
     }
@@ -236,7 +236,7 @@ class Controller extends mysqli{
     }
 
     public function fetchVoucherReport($from_date, $to_date, $category){
-        $sql = " select * from voucher where is_paid != 10  ";
+        $sql = " select * from voucher where is_paid = 1  ";
         $from = ($from_date != '') ? " and date(voucher_date) >= '$from_date' " : ' ';
         $to = ($to_date != '') ? " and date(voucher_date) <= '$to_date' " : ' ';
         $paycat = ($category != '') ? " and payment_category = $category " : ' ';

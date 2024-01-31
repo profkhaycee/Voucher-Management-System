@@ -24,6 +24,7 @@ if($_GET['action'] == 'create' || $_GET['action'] == 'edit'){
    if($result === true){
       $message = "USER PROFILE $str SUCCESFULLY";
       $status = 1001;
+      
    }else{
       $message = "USER PROFILE COULD NOT BE $str .... SOMETHING WENT WRONG";
       $status = 4002;
@@ -61,6 +62,7 @@ if($_GET['action'] == 'change_password'){
    if($result === true){
       $response['status'] = 1001;
       $response['message'] = "Password Changed Successfully";
+      // $_SESSION['password_changed'] = 1;
    }else{
       $response['status'] = 5017;
       $response['message'] = "Password could not be changed. Pls Try Again";
@@ -98,6 +100,7 @@ if($_GET['action'] == 'upload_signature'){
                    if($result === true){
                       $message = "SIGNATURE UPDATED SUCCESFULLY";
                       $status = 1001;
+                     $_SESSION['signature'] = $targetFile;
                    }else{
                       $message = "SIGNATURE COULD NOT BE UPDATED.... SOMETHING WENT WRONG";
                       $status = 4002;

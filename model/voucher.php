@@ -109,7 +109,7 @@ if($_GET['action'] == 'create'){
     $payee_address = $action->validateInput($_POST['payee_address']);
     $voucher_date = $action->validateInput($_POST['voucher_date']);
     $payment_category = $action->validateInput($_POST['payment_category']);
-    $voucher_type = $action->validateInput($_POST['voucher_type']);
+    // $voucher_type = $action->validateInput($_POST['voucher_type']);
     $amount = $action->validateInput($_POST['amount']);
     $vat = $action->validateInput($_POST['vat']);
     $wht = $action->validateInput($_POST['wht']);
@@ -121,7 +121,8 @@ if($_GET['action'] == 'create'){
     $initiator_comment = $action->validateInput($_POST['initiator_comment']);
 
 
-    $response = $action->editVoucher($voucher_id,$payee_name, $payee_email, $payee_phone, $payee_address, $voucher_date, $payment_category, $voucher_type, $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator, $initiator_comment);
+    // $response = $action->editVoucher($voucher_id,$payee_name, $payee_email, $payee_phone, $payee_address, $voucher_date, $payment_category, $voucher_type, $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator, $initiator_comment);
+    $response = $action->editVoucher($voucher_id,$payee_name, $payee_email, $payee_phone, $payee_address, $voucher_date, $payment_category, $amount, $vat, $wht, $stamp_duty, $net_amount, $initiator, $initiator_comment);
     // echo $response; exit;
     if($response === true){
         $resp['message'] = "VOUCHER EDITED SUCCESSFULLY";
